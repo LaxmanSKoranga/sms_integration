@@ -27,7 +27,7 @@
   {
    "default": "0",
    "depends_on": "enabled",
-   "description": "When enabled, an inbound SMS from a number that does not match any existing Contact, Lead, or Deal will automatically create a new CRM Lead.",
+   "description": "Create a new Lead for unrecognized numbers.",
    "fieldname": "auto_create_leads",
    "fieldtype": "Check",
    "label": "Auto Create Leads for Unknown Numbers"
@@ -39,7 +39,7 @@
   },
   {
    "depends_on": "enabled",
-   "description": "The Twilio number SMS is sent from, in E.164 format (e.g. +15551234567). Not required if Messaging Service SID is set. Uses the Account SID/Auth Token from CRM Twilio Settings.",
+   "description": "Twilio number to send from (e.g. +15551234567).",
    "fieldname": "sender_phone_number",
    "fieldtype": "Data",
    "label": "Sender Phone Number",
@@ -47,7 +47,7 @@
   },
   {
    "depends_on": "enabled",
-   "description": "Optional. If set, outbound messages are sent via this Messaging Service instead of the Sender Phone Number directly.",
+   "description": "Optional, sends via a Messaging Service instead.",
    "fieldname": "messaging_service_sid",
    "fieldtype": "Data",
    "label": "Messaging Service SID"
@@ -58,7 +58,7 @@
   },
   {
    "depends_on": "enabled",
-   "description": "Explicit public HTTPS base URL Twilio should sign requests against (e.g. https://crm.example.com). Only needed if this site sits behind a proxy/load balancer where the auto-detected site URL would not match what Twilio computed the request signature for.",
+   "description": "Optional, only needed behind a proxy/load balancer.",
    "fieldname": "webhook_url_override",
    "fieldtype": "Data",
    "label": "Webhook URL Override"
@@ -70,7 +70,7 @@
   },
   {
    "depends_on": "enabled",
-   "description": "Sent automatically in reply when a contact texts STOP/UNSUBSCRIBE. Leave blank to send no auto-reply (not recommended for TCPA compliance).",
+   "description": "Auto-reply sent when a contact texts STOP.",
    "fieldname": "default_opt_out_message",
    "fieldtype": "Small Text",
    "label": "Opt-Out Confirmation Message"

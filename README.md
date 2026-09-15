@@ -1,32 +1,31 @@
 ### SMS Integration
 
-Two-way Twilio SMS integration for Frappe CRM
+Two-way Twilio SMS integration for Frappe CRM.
 
-### Installation
-
-You can install this app using the [bench](https://github.com/frappe/bench) CLI:
+### Install
 
 ```bash
-cd $PATH_TO_YOUR_BENCH
-bench get-app $URL_OF_THIS_REPO --branch version-16
+bench get-app <copy this repo's URL here> --branch main
 bench install-app sms_integration
+bench migrate
 ```
 
-### Contributing
-
-This app uses `pre-commit` for code formatting and linting. Please [install pre-commit](https://pre-commit.com/#installation) and enable it for this repository:
+### Add the SMS tab to CRM
 
 ```bash
-cd apps/sms_integration
-pre-commit install
+bash apps/sms_integration/sms_integration/crm_frontend/apply_sms_tab.sh
+bench restart
 ```
 
-Pre-commit is configured to use the following tools for checking and formatting your code:
+Requires Node.js + Yarn on the server.
 
-- ruff
-- eslint
-- prettier
-- pyupgrade
+### Configure
+
+1. Set `Account SID` and `Auth Token` on **CRM Twilio Settings**.
+2. Set `Sender Phone Number` and enable **SMS Integration Settings**.
+3. In Twilio Console, set the number's webhooks:
+   - Incoming message: `https://<site>/api/method/sms_integration.sms.webhook.inbound`
+   - Status callback: `https://<site>/api/method/sms_integration.sms.webhook.status_callback`
 
 ### License
 
