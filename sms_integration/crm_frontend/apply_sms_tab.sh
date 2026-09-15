@@ -5,7 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BENCH_PATH="${1:-$(cd "$SCRIPT_DIR/../../../.." && pwd)}"
 CRM_PATH="$BENCH_PATH/apps/crm"
-PATCH_FILE="$SCRIPT_DIR/patches/crm-sms-tab.patch"
+PATCHES_DIR="$SCRIPT_DIR/patches"
 OVERLAY_DIR="$SCRIPT_DIR/overlay/src"
 
 if [ ! -d "$CRM_PATH/frontend/src" ]; then
@@ -26,18 +26,34 @@ if ! git -C "$CRM_PATH" diff --quiet -- frontend/src; then
 	exit 1
 fi
 
-echo "Checking that the patch applies cleanly..."
-if ! git -C "$CRM_PATH" apply --check "$PATCH_FILE" 2>/tmp/crm-sms-tab-patch-check.log; then
+CRM_BRANCH="$(git -C "$CRM_PATH" branch --show-current 2>/dev/null || true)"
+
+PATCH_FILE=""
+if [ -n "$CRM_BRANCH" ] && [ -f "$PATCHES_DIR/crm-sms-tab-$CRM_BRANCH.patch" ]; then
+	if git -C "$CRM_PATH" apply --check "$PATCHES_DIR/crm-sms-tab-$CRM_BRANCH.patch" 2>/dev/null; then
+		PATCH_FILE="$PATCHES_DIR/crm-sms-tab-$CRM_BRANCH.patch"
+	fi
+fi
+
+if [ -z "$PATCH_FILE" ]; then
+	for candidate in "$PATCHES_DIR"/crm-sms-tab-*.patch; do
+		[ -f "$candidate" ] || continue
+		if git -C "$CRM_PATH" apply --check "$candidate" 2>/dev/null; then
+			PATCH_FILE="$candidate"
+			break
+		fi
+	done
+fi
+
+if [ -z "$PATCH_FILE" ]; then
 	echo "" >&2
-	echo "error: crm-sms-tab.patch does not apply cleanly against this apps/crm checkout." >&2
-	echo "CRM's frontend has likely changed upstream since this patch was captured." >&2
-	echo "Manual re-diffing of the patch against the current crm frontend is required." >&2
-	echo "" >&2
-	echo "git apply output:" >&2
-	cat /tmp/crm-sms-tab-patch-check.log >&2
+	echo "error: no bundled patch applies cleanly against this apps/crm checkout (branch: ${CRM_BRANCH:-detached})." >&2
+	echo "CRM's frontend has diverged from every version this app has a patch for." >&2
+	echo "Manual re-diffing of a patch against the current crm frontend is required." >&2
 	exit 1
 fi
 
+echo "Using $(basename "$PATCH_FILE")"
 echo "Applying patch..."
 git -C "$CRM_PATH" apply "$PATCH_FILE"
 
