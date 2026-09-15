@@ -1,0 +1,114 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-09-14 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "auto_create_leads",
+  "section_break_number",
+  "sender_phone_number",
+  "messaging_service_sid",
+  "column_break_number",
+  "webhook_url_override",
+  "section_break_optout",
+  "default_opt_out_message"
+ ],
+ "fields": [
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Enabled"
+  },
+  {
+   "default": "0",
+   "depends_on": "enabled",
+   "description": "When enabled, an inbound SMS from a number that does not match any existing Contact, Lead, or Deal will automatically create a new CRM Lead.",
+   "fieldname": "auto_create_leads",
+   "fieldtype": "Check",
+   "label": "Auto Create Leads for Unknown Numbers"
+  },
+  {
+   "fieldname": "section_break_number",
+   "fieldtype": "Section Break",
+   "label": "Sending Number"
+  },
+  {
+   "depends_on": "enabled",
+   "description": "The Twilio number SMS is sent from, in E.164 format (e.g. +15551234567). Not required if Messaging Service SID is set. Uses the Account SID/Auth Token from CRM Twilio Settings.",
+   "fieldname": "sender_phone_number",
+   "fieldtype": "Data",
+   "label": "Sender Phone Number",
+   "options": "Phone"
+  },
+  {
+   "depends_on": "enabled",
+   "description": "Optional. If set, outbound messages are sent via this Messaging Service instead of the Sender Phone Number directly.",
+   "fieldname": "messaging_service_sid",
+   "fieldtype": "Data",
+   "label": "Messaging Service SID"
+  },
+  {
+   "fieldname": "column_break_number",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "enabled",
+   "description": "Explicit public HTTPS base URL Twilio should sign requests against (e.g. https://crm.example.com). Only needed if this site sits behind a proxy/load balancer where the auto-detected site URL would not match what Twilio computed the request signature for.",
+   "fieldname": "webhook_url_override",
+   "fieldtype": "Data",
+   "label": "Webhook URL Override"
+  },
+  {
+   "fieldname": "section_break_optout",
+   "fieldtype": "Section Break",
+   "label": "Compliance"
+  },
+  {
+   "depends_on": "enabled",
+   "description": "Sent automatically in reply when a contact texts STOP/UNSUBSCRIBE. Leave blank to send no auto-reply (not recommended for TCPA compliance).",
+   "fieldname": "default_opt_out_message",
+   "fieldtype": "Small Text",
+   "label": "Opt-Out Confirmation Message"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-09-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "SMS Integration",
+ "name": "SMS Integration Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
